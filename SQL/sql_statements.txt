@@ -1,0 +1,15 @@
+who caught a karp:
+
+SELECT tfisher.name, tfisher.surname, tfish.name, tcatch.date
+FROM tcatch, tfish, tfisher
+WHERE tcatch.fisher = tfisher.id 
+	AND tcatch.fish = tfish.id 
+    AND tfish.name = 'karp'
+ORDER BY tcatch.date;
+
+list all kinds of fish and who caught them:
+
+SELECT tfish.name, tcatch.fisher, tcatch.fish
+FROM tfish
+LEFT JOIN tcatch
+ON tfish.id = tcatch.fish;
