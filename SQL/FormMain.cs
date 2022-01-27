@@ -5,28 +5,32 @@ namespace SQL
 {
     public partial class FormMain : Form
     {
+        private enum DbType
+        {
+            ODBC,
+            MYSQL
+        }
         private OdbcWrapper oOdbc;
+        private MySqlWrapper oMySql;
         private IDatabaseInterface oDatabase;
-        private string sConnectionString = "dsn=personendb";
+        private DbType eDbType;
         public FormMain()
         {
             InitializeComponent();
 
-            textBoxDsn.Text = sConnectionString.Substring(sConnectionString.IndexOf('=') + 1);
-            oOdbc = new OdbcWrapper(sConnectionString);
+            textBoxDsn.Text = "personendb";
             radioButtonOdbc_CheckedChanged(null, null);
         }
 
         private void UpdateConnectionControls(bool bOdbcChecked)
         {
             textBoxDsn.Enabled = bOdbcChecked;
-
             textBoxServer.Enabled = !bOdbcChecked;
             textBoxDb.Enabled = !bOdbcChecked;
             textBoxUser.Enabled = !bOdbcChecked;
             textBoxPassword.Enabled = !bOdbcChecked;
 
-            oDatabase = (bOdbcChecked) ? oOdbc : null;
+            eDbType = (bOdbcChecked) ? DbType.ODBC : DbType.MYSQL;
         }
 
         private void UpdateStatus(string sMsg)
@@ -34,6 +38,72 @@ namespace SQL
             if (sMsg != null)
             {
                 textBoxStatus.AppendText(sMsg + Environment.NewLine);
+            }
+        }
+        private string BuildConnectionString()
+        {
+            switch (eDbType)
+            {
+                case DbType.ODBC:
+                    return $"dsn={textBoxDsn.Text}";
+                case DbType.MYSQL:
+                    return "server=" + textBoxServer.Text + "database=" + textBoxDb.Text +
+                           "uid=" + textBoxUser.Text + "password=" + textBoxPassword.Text;
+                default:
+                    return null;
+            }
+        }
+
+        private void UpdateConnectionString()
+        {
+            string sConnectionString = BuildConnectionString();
+
+            switch(eDbType)
+            {
+                case DbType.ODBC:
+                    if (oOdbc == null)
+                    {
+                        try
+                        {
+                            oOdbc = new OdbcWrapper(sConnectionString);
+                        }
+                        catch (SqlException oEx)
+                        {
+                            textBoxStatus.AppendText(
+                                "+++ ERROR +++" + Environment.NewLine
+                                + oEx.Message + Environment.NewLine
+                                );
+                        }
+                    }
+                    else
+                    {
+                        oOdbc.ConnectionString = sConnectionString;
+                    }
+
+                    oDatabase = oOdbc;
+                    break;
+                case DbType.MYSQL:
+
+                    if (oMySql == null)
+                    {
+                        try
+                        {
+                            oMySql = new MySqlWrapper(sConnectionString);
+                        }
+                        catch (SqlException oEx)
+                        {
+                            textBoxStatus.AppendText(
+                                "+++ ERROR +++" + Environment.NewLine
+                                + oEx.Message + Environment.NewLine
+                                );
+                        }
+                    }
+
+                    oDatabase = oMySql;
+                    break;
+                default:
+                    // TODO: this should never happen. add logging anyway
+                    return;
             }
         }
 
@@ -56,17 +126,7 @@ namespace SQL
 
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            if (oDatabase == null)
-            {
-                return;
-            }
-
-            bool bStringChanged = !(sConnectionString.Equals($"dsn={textBoxDsn.Text}"));
-            if (bStringChanged)
-            {
-                sConnectionString = $"dsn={textBoxDsn.Text}";
-                oDatabase.UpdateConnectionString(sConnectionString);
-            }
+            UpdateConnectionString();
 
             try
             {
@@ -82,6 +142,7 @@ namespace SQL
                 UpdateStatus(oEx.Message);
             }
         }
+
 
         private void buttonDisconnect_Click(object sender, EventArgs e)
         {

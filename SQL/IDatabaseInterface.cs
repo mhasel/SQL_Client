@@ -13,6 +13,5 @@ namespace SQL
         void Select(string sQuery);
         void Scalar(string sQuery);
         void NonQuery(string sQuery);
-        void UpdateConnectionString(string sConnectionString);
     }
 }

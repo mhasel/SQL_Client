@@ -5,12 +5,31 @@ namespace SQL
 {
     public class OdbcWrapper : IDatabaseInterface
     {
-        OdbcConnection oOdbcConnection { get; set; }
+        OdbcConnection oOdbcConnection;
         OdbcCommand oOdbcCommand { get; set; }
         OdbcDataReader oOdbcDataReader { get; set; }
+        public string ConnectionString
+        {
+            get
+            {
+                return oOdbcConnection?.ConnectionString;
+            }
+            set
+            {
+                if ((oOdbcConnection != null) && (value != null))
+                {
+                    oOdbcConnection.ConnectionString = value;
+                }
+            }
+        }
         public OdbcWrapper(string sConnectionString)
         {
-            oOdbcConnection = new OdbcConnection(sConnectionString);
+            if (sConnectionString == null)
+            {
+                throw new SqlException("Invalid connection string. Value cannot be NULL.");
+            }
+            ConnectionString = sConnectionString;
+            oOdbcConnection = new OdbcConnection(ConnectionString);
         }
 
         public OdbcWrapper(string sUid, string sPwd, string sServer, string sPort)
@@ -33,14 +52,13 @@ namespace SQL
             }
             catch (Exception oEx)
             {
-                //oOdbcConnection.Close();
                 throw new SqlException($"Unable to establish connection:{Environment.NewLine}{oEx.Message}");
             }
         }
 
         public void Disconnect()
         {
-            oOdbcConnection.Close();
+            oOdbcConnection?.Close();
         }
 
         public void Select(string sQuery)
@@ -54,16 +72,6 @@ namespace SQL
         public void NonQuery(string sQuery)
         {
             throw new NotImplementedException();
-        }
-        public void UpdateConnectionString(string sConnectionString)
-        {
-            if (sConnectionString == null)
-            {
-                // send msg to status textbox
-                return;
-            }
-
-            oOdbcConnection.ConnectionString = sConnectionString;
         }
     }
 }
