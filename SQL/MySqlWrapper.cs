@@ -1,5 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace SQL
@@ -7,8 +9,6 @@ namespace SQL
     public class MySqlWrapper : IDatabaseInterface
     {
         private MySqlConnection oMySqlConnection;
-        private MySqlCommand oQuery;
-
         public MySqlWrapper(string sConnectionString)
         {
             if (sConnectionString == null)
@@ -32,7 +32,7 @@ namespace SQL
             {
                 oMySqlConnection.Open();
             }
-            catch(Exception oEx)
+            catch (Exception oEx)
             {
                 throw new SqlException($"Unable to establish connection:{Environment.NewLine}{oEx.Message}");
             }
@@ -45,12 +45,12 @@ namespace SQL
 
         public int NonQuery(string sQuery)
         {
-            oQuery = new MySqlCommand(sQuery);
-
-            // TODO: check documentation if method can throw exceptions
             try
             {
-                return Convert.ToInt32(oQuery.ExecuteNonQuery());
+                using (var oQuery = new MySqlCommand(sQuery, oMySqlConnection))
+                {
+                    return Convert.ToInt32(oQuery.ExecuteNonQuery());
+                }
             }
             catch (Exception oEx)
             {
@@ -58,14 +58,45 @@ namespace SQL
             }
         }
 
-        public void Scalar(string sQuery)
+        public int Scalar(string sQuery)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var oQuery = new MySqlCommand(sQuery, oMySqlConnection))
+                {
+                    return Convert.ToInt32(oQuery.ExecuteScalar());
+                }
+            }
+            catch (Exception oEx)
+            {
+                throw new SqlException($"Could not execute query: {oEx.Message}");
+            }
         }
 
-        public void Select(string sQuery)
+        public List<string[]> Select(string sQuery)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var oQuery = new MySqlCommand(sQuery, oMySqlConnection))
+                using (var oReader = oQuery.ExecuteReader())
+                {
+                    if (!oReader.HasRows)
+                        return null;
+
+                    var oData = new List<string[]>();
+                    oData.Add(Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray());
+                    while (oReader.Read())
+                    {
+                        var oColumns = Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetString).ToArray();
+                        oData.Add(oColumns);
+                    }
+                    return oData;
+                }
+            }
+            catch (Exception oEx)
+            {
+                throw new SqlException($"Could not execute query: {oEx.Message}");
+            }
         }
     }
 }

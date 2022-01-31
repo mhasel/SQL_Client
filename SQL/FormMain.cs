@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 
 namespace SQL
@@ -10,6 +12,7 @@ namespace SQL
             ODBC,
             MYSQL
         }
+
         private IDatabaseInterface oDatabase;
         private DbType eDbType;
         public FormMain()
@@ -70,10 +73,8 @@ namespace SQL
                     }
                     catch (SqlException oEx)
                     {
-                        textBoxStatus.AppendText(
-                            "+++ ERROR +++" + Environment.NewLine
-                            + oEx.Message + Environment.NewLine
-                            );
+                        UpdateStatus("+++ ERROR ***");
+                        UpdateStatus(oEx.Message);
                     }
                     break;
                 case DbType.MYSQL:
@@ -83,10 +84,8 @@ namespace SQL
                     }
                     catch (SqlException oEx)
                     {
-                        textBoxStatus.AppendText(
-                            "+++ ERROR +++" + Environment.NewLine
-                            + oEx.Message + Environment.NewLine
-                            );
+                        UpdateStatus("+++ ERROR ***");
+                        UpdateStatus(oEx.Message);
                     }
                     break;
                 default:
@@ -108,10 +107,8 @@ namespace SQL
             }
             catch (Exception oEx)
             {
-                textBoxStatus.AppendText(
-                    "Unable to open browser due to the following error:"
-                    + oEx.Message + Environment.NewLine
-                    );
+                UpdateStatus("Unable to open browser due to the following error:"
+                    + oEx.Message);
             }
         }
 
@@ -151,7 +148,35 @@ namespace SQL
 
         private void buttonSelect_Click(object sender, EventArgs e)
         {
+            try
+            {
+                List<string[]> oResults = oDatabase.Select(textBoxQuery.Text);
+                if (oResults == null)
+                {
+                    textBoxResult.AppendText("Query has returned no results.");
+                    return;
+                }
 
+                foreach (string[] sRow in oResults)
+                {
+                    foreach (string sCol in sRow)
+                    {
+                        textBoxResult.AppendText(string.Format("| {0} |",
+                           sCol));
+                    }
+                    textBoxResult.AppendText(Environment.NewLine);
+                }
+            }
+            catch (Exception oEx)
+            {
+                textBoxResult.AppendText(
+                    "Unable to execute query. Check the \"Message\" box "
+                    + "in the \"Connection\" tab for more information."
+                    + Environment.NewLine
+                    );
+                UpdateStatus("+++ ERROR ***");
+                UpdateStatus(oEx.Message);
+            }
         }
 
         private void buttonScalar_Click(object sender, EventArgs e)
@@ -173,23 +198,28 @@ namespace SQL
                     case null:
                         throw new SqlException("Database interface is pointing to NULL.");
                     case -1:
-                        textBoxResult.AppendText("NonQuery executed successfully.");
+                        textBoxResult.AppendText("NonQuery executed successfully." + Environment.NewLine);
                         break;
                     default:
                         textBoxResult.AppendText(
                             "NonQuery executed successfully on "
-                            + iResult.ToString() + " rows."
+                            + iResult.ToString() + " rows." + Environment.NewLine
                             );
                         break;
                 }
             }
-            catch(SqlException oEx)
+            catch (Exception oEx)
             {
-                textBoxStatus.AppendText(
-                    "+++ ERROR+++" + Environment.NewLine
-                    + oEx.Message + Environment.NewLine
+                textBoxResult.AppendText(
+                    "Unable to execute query. Check the \"Message\" box " 
+                    + "in the \"Connection\" tab for more information."
+                    + Environment.NewLine
                     );
+                UpdateStatus("+++ ERROR ***");
+                UpdateStatus(oEx.Message);
             }
         }
+
+
     }
 }

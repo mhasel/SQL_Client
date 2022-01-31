@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Odbc;
+using System.Linq;
 
 namespace SQL
 {
     public class OdbcWrapper : IDatabaseInterface
     {
         private OdbcConnection oOdbcConnection;
-        private OdbcCommand oQuery;
-        private OdbcDataReader oOdbcDataReader;
-
+        
         public OdbcWrapper(string sConnectionString)
         {
             if (sConnectionString == null)
@@ -49,20 +50,53 @@ namespace SQL
             oOdbcConnection?.Close();
         }
 
-        public void Select(string sQuery)
+        public List<string[]> Select(string sQuery)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var oQuery = new OdbcCommand(sQuery, oOdbcConnection))
+                using (var oReader = oQuery.ExecuteReader())
+                {
+                    if (!oReader.HasRows)
+                        return null;
+
+                    var oData = new List<string[]>();
+                    oData.Add(Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray());
+                    while (oReader.Read())
+                    {
+                        var oColumns = Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetString).ToArray();
+                        oData.Add(oColumns);    
+                    }
+                    return oData;
+                }
+            }
+            catch (Exception oEx)
+            {
+                throw new SqlException($"Could not execute query: {oEx.Message}");
+            }
         }
-        public void Scalar(string sQuery)
+        public int Scalar(string sQuery)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var oQuery = new OdbcCommand(sQuery, oOdbcConnection))
+                {
+                    return Convert.ToInt32(oQuery.ExecuteScalar());
+                }
+            }
+            catch (Exception oEx)
+            {
+                throw new SqlException($"Could not execute query: {oEx.Message}");
+            }
         }
         public int NonQuery(string sQuery)
         {
-            oQuery = new OdbcCommand(sQuery);
             try
             {
-                return Convert.ToInt32(oQuery.ExecuteNonQuery());
+                using (var oQuery = new OdbcCommand(sQuery, oOdbcConnection))
+                {
+                    return Convert.ToInt32(oQuery.ExecuteNonQuery());
+                }
             }
             catch (Exception oEx)
             {

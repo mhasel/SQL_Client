@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace SQL
     {
         void Connect();
         void Disconnect();
-        void Select(string sQuery);
-        void Scalar(string sQuery);
+        List<string[]> Select(string sQuery);
+        int Scalar(string sQuery);
         int NonQuery(string sQuery);
     }
 }
