@@ -5,21 +5,19 @@ namespace SQL
 {
     public class OdbcWrapper : IDatabaseInterface
     {
-        OdbcConnection oOdbcConnection;
-        OdbcCommand oOdbcCommand { get; set; }
-        OdbcDataReader oOdbcDataReader { get; set; }
+        private OdbcConnection oOdbcConnection;
+        private OdbcCommand oQuery;
+        private OdbcDataReader oOdbcDataReader;
+        private string sConnectionString;
         public string ConnectionString
         {
             get
             {
-                return oOdbcConnection?.ConnectionString;
+                return sConnectionString;
             }
             set
             {
-                if ((oOdbcConnection != null) && (value != null))
-                {
-                    oOdbcConnection.ConnectionString = value;
-                }
+                sConnectionString = value;
             }
         }
         public OdbcWrapper(string sConnectionString)
@@ -28,8 +26,8 @@ namespace SQL
             {
                 throw new SqlException("Invalid connection string. Value cannot be NULL.");
             }
-            ConnectionString = sConnectionString;
-            oOdbcConnection = new OdbcConnection(ConnectionString);
+            this.sConnectionString = sConnectionString;
+            oOdbcConnection = new OdbcConnection(sConnectionString);
         }
 
         public OdbcWrapper(string sUid, string sPwd, string sServer, string sPort)
@@ -40,14 +38,20 @@ namespace SQL
             oBuilder.Add("Pwd",     sPwd);
             oBuilder.Add("Server",  sServer);
             oBuilder.Add("Port",    sPort);
+            sConnectionString = oBuilder.ConnectionString;
 
-            oOdbcConnection = new OdbcConnection(oBuilder.ConnectionString);
+            oOdbcConnection = new OdbcConnection(sConnectionString);
         }
 
         public void Connect()
         {
             try
             {
+                if (oOdbcConnection.ConnectionString != sConnectionString)
+                {
+                    oOdbcConnection.ConnectionString = sConnectionString;
+                }
+
                 oOdbcConnection.Open();
             }
             catch (Exception oEx)
@@ -69,9 +73,17 @@ namespace SQL
         {
             throw new NotImplementedException();
         }
-        public void NonQuery(string sQuery)
+        public int NonQuery(string sQuery)
         {
-            throw new NotImplementedException();
+            oQuery = new OdbcCommand(sQuery);
+            try
+            {
+                return Convert.ToInt32(oQuery.ExecuteNonQuery());
+            }
+            catch (Exception oEx)
+            {
+                throw new SqlException($"Could not execute query: {oEx.Message}");
+            }
         }
     }
 }

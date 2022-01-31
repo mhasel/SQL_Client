@@ -290,6 +290,7 @@
             this.buttonNonQuery.TabIndex = 4;
             this.buttonNonQuery.Text = "Non Query";
             this.buttonNonQuery.UseVisualStyleBackColor = true;
+            this.buttonNonQuery.Click += new System.EventHandler(this.buttonNonQuery_Click);
             // 
             // buttonScalar
             // 
@@ -300,6 +301,7 @@
             this.buttonScalar.TabIndex = 3;
             this.buttonScalar.Text = "Scalar";
             this.buttonScalar.UseVisualStyleBackColor = true;
+            this.buttonScalar.Click += new System.EventHandler(this.buttonScalar_Click);
             // 
             // buttonSelect
             // 
@@ -310,6 +312,7 @@
             this.buttonSelect.TabIndex = 2;
             this.buttonSelect.Text = "Select";
             this.buttonSelect.UseVisualStyleBackColor = true;
+            this.buttonSelect.Click += new System.EventHandler(this.buttonSelect_Click);
             // 
             // textBoxResult
             // 

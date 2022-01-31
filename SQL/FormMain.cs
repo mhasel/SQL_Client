@@ -19,6 +19,11 @@ namespace SQL
             InitializeComponent();
 
             textBoxDsn.Text = "personendb";
+            textBoxServer.Text = "127.0.0.1";
+            textBoxUser.Text = "root";
+            textBoxDb.Text = "personendb";
+            textBoxPassword.Text = "";
+
             radioButtonOdbc_CheckedChanged(null, null);
         }
 
@@ -47,8 +52,8 @@ namespace SQL
                 case DbType.ODBC:
                     return $"dsn={textBoxDsn.Text}";
                 case DbType.MYSQL:
-                    return "server=" + textBoxServer.Text + "database=" + textBoxDb.Text +
-                           "uid=" + textBoxUser.Text + "password=" + textBoxPassword.Text;
+                    return "server=" + textBoxServer.Text + ";database=" + textBoxDb.Text +
+                           ";uid=" + textBoxUser.Text + ";password=" + textBoxPassword.Text + ";";
                 default:
                     return null;
             }
@@ -98,6 +103,10 @@ namespace SQL
                                 );
                         }
                     }
+                    else
+                    {
+                        oMySql.ConnectionString = sConnectionString;
+                    }
 
                     oDatabase = oMySql;
                     break;
@@ -120,7 +129,10 @@ namespace SQL
             }
             catch (Exception oEx)
             {
-                textBoxStatus.AppendText($"Unable to open browser due to the following error: {oEx.Message}");
+                textBoxStatus.AppendText(
+                    "Unable to open browser due to the following error:"
+                    + oEx.Message + Environment.NewLine
+                    );
             }
         }
 
@@ -135,6 +147,9 @@ namespace SQL
                 UpdateStatus("Connection established.");
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = true;
+                buttonSelect.Enabled = true;
+                buttonScalar.Enabled = true;
+                buttonNonQuery.Enabled = true;
             }
             catch (SqlException oEx)
             {
@@ -150,6 +165,52 @@ namespace SQL
             UpdateStatus("Connection closed.");
             buttonConnect.Enabled = true;
             buttonDisconnect.Enabled = false;
+            buttonSelect.Enabled = false;
+            buttonScalar.Enabled = false;
+            buttonNonQuery.Enabled = false;
+        }
+
+        private void buttonSelect_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonScalar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonNonQuery_Click(object sender, EventArgs e)
+        {
+            // nullable int
+            int? iResult;
+            try
+            {
+                // iResult is null if oDatabase is not referencing an object
+                iResult = oDatabase?.NonQuery(textBoxQuery.Text);
+                switch (iResult)
+                {
+                    // catch edge case. the only way this happens is due to a programming error
+                    case null:
+                        throw new SqlException("Database interface is pointing to NULL.");
+                    case -1:
+                        textBoxResult.AppendText("NonQuery executed successfully.");
+                        break;
+                    default:
+                        textBoxResult.AppendText(
+                            "NonQuery executed successfully on "
+                            + iResult.ToString() + " rows."
+                            );
+                        break;
+                }
+            }
+            catch(SqlException oEx)
+            {
+                textBoxStatus.AppendText(
+                    "+++ ERROR+++" + Environment.NewLine
+                    + oEx.Message + Environment.NewLine
+                    );
+            }
         }
     }
 }
