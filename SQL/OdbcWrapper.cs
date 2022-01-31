@@ -8,31 +8,20 @@ namespace SQL
         private OdbcConnection oOdbcConnection;
         private OdbcCommand oQuery;
         private OdbcDataReader oOdbcDataReader;
-        private string sConnectionString;
-        public string ConnectionString
-        {
-            get
-            {
-                return sConnectionString;
-            }
-            set
-            {
-                sConnectionString = value;
-            }
-        }
+
         public OdbcWrapper(string sConnectionString)
         {
             if (sConnectionString == null)
             {
                 throw new SqlException("Invalid connection string. Value cannot be NULL.");
             }
-            this.sConnectionString = sConnectionString;
+
             oOdbcConnection = new OdbcConnection(sConnectionString);
         }
 
         public OdbcWrapper(string sUid, string sPwd, string sServer, string sPort)
         {
-            // Server=myServerAddress;Port=1234;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+            string sConnectionString;
             OdbcConnectionStringBuilder oBuilder = new OdbcConnectionStringBuilder();
             oBuilder.Add("Uid",     sUid);
             oBuilder.Add("Pwd",     sPwd);
@@ -47,11 +36,6 @@ namespace SQL
         {
             try
             {
-                if (oOdbcConnection.ConnectionString != sConnectionString)
-                {
-                    oOdbcConnection.ConnectionString = sConnectionString;
-                }
-
                 oOdbcConnection.Open();
             }
             catch (Exception oEx)

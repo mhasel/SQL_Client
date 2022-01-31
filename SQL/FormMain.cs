@@ -10,8 +10,6 @@ namespace SQL
             ODBC,
             MYSQL
         }
-        private OdbcWrapper oOdbc;
-        private MySqlWrapper oMySql;
         private IDatabaseInterface oDatabase;
         private DbType eDbType;
         public FormMain()
@@ -66,52 +64,33 @@ namespace SQL
             switch(eDbType)
             {
                 case DbType.ODBC:
-                    if (oOdbc == null)
+                    try
                     {
-                        try
-                        {
-                            oOdbc = new OdbcWrapper(sConnectionString);
-                        }
-                        catch (SqlException oEx)
-                        {
-                            textBoxStatus.AppendText(
-                                "+++ ERROR +++" + Environment.NewLine
-                                + oEx.Message + Environment.NewLine
-                                );
-                        }
+                        oDatabase = new OdbcWrapper(sConnectionString);
                     }
-                    else
+                    catch (SqlException oEx)
                     {
-                        oOdbc.ConnectionString = sConnectionString;
+                        textBoxStatus.AppendText(
+                            "+++ ERROR +++" + Environment.NewLine
+                            + oEx.Message + Environment.NewLine
+                            );
                     }
-
-                    oDatabase = oOdbc;
                     break;
                 case DbType.MYSQL:
-
-                    if (oMySql == null)
+                    try
                     {
-                        try
-                        {
-                            oMySql = new MySqlWrapper(sConnectionString);
-                        }
-                        catch (SqlException oEx)
-                        {
-                            textBoxStatus.AppendText(
-                                "+++ ERROR +++" + Environment.NewLine
-                                + oEx.Message + Environment.NewLine
-                                );
-                        }
+                        oDatabase = new MySqlWrapper(sConnectionString);
                     }
-                    else
+                    catch (SqlException oEx)
                     {
-                        oMySql.ConnectionString = sConnectionString;
+                        textBoxStatus.AppendText(
+                            "+++ ERROR +++" + Environment.NewLine
+                            + oEx.Message + Environment.NewLine
+                            );
                     }
-
-                    oDatabase = oMySql;
                     break;
                 default:
-                    // TODO: this should never happen. add logging anyway
+                    // TODO: this should never happen. add logging
                     return;
             }
         }

@@ -8,18 +8,6 @@ namespace SQL
     {
         private MySqlConnection oMySqlConnection;
         private MySqlCommand oQuery;
-        private string sConnectionString;
-        public string ConnectionString 
-        { 
-            get
-            {
-                 return sConnectionString;
-            }
-            set
-            {
-                sConnectionString = value;
-            }
-        }
 
         public MySqlWrapper(string sConnectionString)
         {
@@ -27,13 +15,14 @@ namespace SQL
             {
                 throw new SqlException("Invalid connection string. Value cannot be NULL.");
             }
-            this.sConnectionString = sConnectionString;
+
             oMySqlConnection = new MySqlConnection(sConnectionString);
         }
 
         public MySqlWrapper(string sUid, string sPwd, string sServer, string sDatabase)
         {
-            sConnectionString = $"server={sServer};database={sDatabase};uid={sUid};password={sPwd}";
+            string sConnectionString =
+                $"server={sServer};database={sDatabase};uid={sUid};password={sPwd}";
             oMySqlConnection = new MySqlConnection(sConnectionString);
         }
 
@@ -41,10 +30,6 @@ namespace SQL
         {
             try
             {
-                if (oMySqlConnection.ConnectionString != sConnectionString)
-                {
-                    oMySqlConnection.ConnectionString = sConnectionString;
-                }
                 oMySqlConnection.Open();
             }
             catch(Exception oEx)
