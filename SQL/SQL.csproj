@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="MySqlWrapper.cs" />
     <Compile Include="OdbcWrapper.cs" />
-    <Compile Include="IDatabaseInterface.cs" />
+    <Compile Include="IDatabase.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>

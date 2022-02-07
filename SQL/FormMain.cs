@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Windows.Forms;
 
 namespace SQL
 {
     public partial class FormMain : Form
     {
+        // --------------------Enums & Constants--------------------
         private enum DbType
         {
             ODBC,
             MYSQL
         }
 
-        private IDatabaseInterface oDatabase;
+        private const string sError = "++++ ERROR ++++";
+
+        // --------------------Fields--------------------
+
+        private IDatabase oDatabase;
         private DbType eDbType;
+
+        // --------------------Constructor--------------------
         public FormMain()
         {
             InitializeComponent();
@@ -28,7 +34,12 @@ namespace SQL
             radioButtonOdbc_CheckedChanged(null, null);
         }
 
-        private void UpdateConnectionControls(bool bOdbcChecked)
+        // --------------------Methods--------------------
+        /// <summary>
+        /// Toggle textboxes for selected database.
+        /// </summary>
+        /// <param name="bOdbcChecked">Flag, whether or not Odbc connection radiobutton is checked</param>
+        private void ToggleDbInfoControls(bool bOdbcChecked)
         {
             textBoxDsn.Enabled = bOdbcChecked;
             textBoxServer.Enabled = !bOdbcChecked;
@@ -39,6 +50,10 @@ namespace SQL
             eDbType = (bOdbcChecked) ? DbType.ODBC : DbType.MYSQL;
         }
 
+        /// <summary>
+        /// Append message text to status textbox. Put cursor on new line.
+        /// </summary>
+        /// <param name="sMsg">The message to put</param>
         private void UpdateStatus(string sMsg)
         {
             if (sMsg != null)
@@ -46,6 +61,23 @@ namespace SQL
                 textBoxStatus.AppendText(sMsg + Environment.NewLine);
             }
         }
+
+        /// <summary>
+        /// Append results to result textbox. Put cursor on new line.
+        /// </summary>
+        /// <param name="sMsg">The message to put</param>
+        private void UpdateResults(string sMsg)
+        {
+            if (sMsg != null)
+            {
+                textBoxResult.AppendText(sMsg + Environment.NewLine);
+            }
+        }
+
+        /// <summary>
+        /// Build connection string, depending on which radio button is checked.
+        /// </summary>
+        /// <returns>The assembled connection string or null (edge case).</returns>
         private string BuildConnectionString()
         {
             switch (eDbType)
@@ -60,7 +92,10 @@ namespace SQL
             }
         }
 
-        private void UpdateConnectionString()
+        /// <summary>
+        /// Builds a connection string and initializes an instance of the chosen database.
+        /// </summary>
+        private void InitDatabase()
         {
             string sConnectionString = BuildConnectionString();
 
@@ -73,7 +108,7 @@ namespace SQL
                     }
                     catch (SqlException oEx)
                     {
-                        UpdateStatus("+++ ERROR ***");
+                        UpdateStatus(sError);
                         UpdateStatus(oEx.Message);
                     }
                     break;
@@ -84,21 +119,33 @@ namespace SQL
                     }
                     catch (SqlException oEx)
                     {
-                        UpdateStatus("+++ ERROR ***");
+                        UpdateStatus(sError);
                         UpdateStatus(oEx.Message);
                     }
                     break;
                 default:
-                    // TODO: this should never happen. add logging
+                    // Edge-case error. This shouldn't ever happen.
+                    UpdateStatus(sError);
+                    UpdateStatus("Unexpected: No database type selected.");
                     return;
             }
         }
-
+        
+        /// <summary>
+        /// Update database-dependant controls.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void radioButtonOdbc_CheckedChanged(object sender, System.EventArgs e)
         {
-            UpdateConnectionControls(radioButtonOdbc.Checked);
+            ToggleDbInfoControls(radioButtonOdbc.Checked);
         }
 
+        /// <summary>
+        /// Open w3schools sql website in the default browser.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonHelp_Click(object sender, System.EventArgs e)
         {
             try
@@ -112,9 +159,14 @@ namespace SQL
             }
         }
 
+        /// <summary>
+        /// Attempt to connect to selected database and toggle query/connection buttons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConnect_Click(object sender, EventArgs e)
         {
-            UpdateConnectionString();
+            InitDatabase();
 
             try
             {
@@ -129,12 +181,16 @@ namespace SQL
             }
             catch (SqlException oEx)
             {
-                UpdateStatus("++++ ERROR ++++");
+                UpdateStatus(sError);
                 UpdateStatus(oEx.Message);
             }
         }
 
-
+        /// <summary>
+        /// Disconnect from database and toggle query/connection buttons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonDisconnect_Click(object sender, EventArgs e)
         {
             oDatabase.Disconnect();
@@ -146,6 +202,11 @@ namespace SQL
             buttonNonQuery.Enabled = false;
         }
 
+        /// <summary>
+        /// Execute select query and show results in result-textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonSelect_Click(object sender, EventArgs e)
         {
             try
@@ -153,7 +214,7 @@ namespace SQL
                 List<string[]> oResults = oDatabase.Select(textBoxQuery.Text);
                 if (oResults == null)
                 {
-                    textBoxResult.AppendText("Query has returned no results.");
+                    UpdateResults("Query has returned no results.");
                     return;
                 }
 
@@ -161,29 +222,61 @@ namespace SQL
                 {
                     foreach (string sCol in sRow)
                     {
-                        textBoxResult.AppendText(string.Format("| {0} |",
+                        UpdateResults(string.Format("| {0} |",
                            sCol));
-                    }
-                    textBoxResult.AppendText(Environment.NewLine);
+                    }                    
                 }
             }
             catch (Exception oEx)
             {
-                textBoxResult.AppendText(
-                    "Unable to execute query. Check the \"Message\" box "
+                UpdateResults(sError);
+                UpdateResults(
+                     "Unable to execute query. Check the \"Status\" box "
                     + "in the \"Connection\" tab for more information."
-                    + Environment.NewLine
                     );
-                UpdateStatus("+++ ERROR ***");
+                UpdateStatus(sError);
                 UpdateStatus(oEx.Message);
             }
         }
 
+        /// <summary>
+        /// Execute scalar query and show results in result-textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonScalar_Click(object sender, EventArgs e)
         {
+            string sResult;
+            try
+            {
+                // sResult is null if there are no results.
+                sResult = oDatabase.Scalar(textBoxQuery.Text);
 
+                if (sResult == null)
+                {
+                    UpdateResults("Query has returned no results.");
+                    return;
+                }
+
+                UpdateResults(sResult);
+            }
+            catch (Exception oEx)
+            {
+                UpdateResults(sError);
+                UpdateResults(
+                    "Unable to execute query. Check the \"Status\" box "
+                    + "in the \"Connection\" tab for more information."
+                    );
+                UpdateStatus(sError);
+                UpdateStatus(oEx.Message);
+            }
         }
 
+        /// <summary>
+        /// Execute non-query and show results in result-textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonNonQuery_Click(object sender, EventArgs e)
         {
             // nullable int
@@ -198,28 +291,26 @@ namespace SQL
                     case null:
                         throw new SqlException("Database interface is pointing to NULL.");
                     case -1:
-                        textBoxResult.AppendText("NonQuery executed successfully." + Environment.NewLine);
+                        UpdateResults("NonQuery executed successfully.");
                         break;
                     default:
-                        textBoxResult.AppendText(
+                        UpdateResults(
                             "NonQuery executed successfully on "
-                            + iResult.ToString() + " rows." + Environment.NewLine
+                            + iResult.ToString() + " rows."
                             );
                         break;
                 }
             }
             catch (Exception oEx)
             {
-                textBoxResult.AppendText(
-                    "Unable to execute query. Check the \"Message\" box " 
+                UpdateResults(sError);
+                UpdateResults(
+                    "Unable to execute query. Check the \"Status\" box "
                     + "in the \"Connection\" tab for more information."
-                    + Environment.NewLine
                     );
-                UpdateStatus("+++ ERROR ***");
+                UpdateStatus(sError);
                 UpdateStatus(oEx.Message);
             }
         }
-
-
     }
 }
