@@ -99,13 +99,15 @@ namespace SQL
                     // Each string array represents a row, with each item in the array being a column.
                     var oData = new List<string[]>
                     {
-                        Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray()
+                        Enumerable.Range(0, oReader.FieldCount).Select(i => Helpers.NullCheck<string>(oReader.GetString(i)) ?? "Null").ToArray()
                     };
 
                     // Add results for each row to list.
                     while (oReader.Read())
                     {
-                        var oColumns = Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetString).ToArray();
+                        var oColumns = Enumerable.Range(0, oReader.FieldCount)
+                            .Select(i => Helpers.NullCheck<string>(oReader.GetString(i)) ?? "Null")
+                            .ToArray();                        
                         oData.Add(oColumns);
                     }
                     return oData;

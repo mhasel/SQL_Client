@@ -222,9 +222,10 @@ namespace SQL
                 {
                     foreach (string sCol in sRow)
                     {
-                        UpdateResults(string.Format("| {0} |",
+                        textBoxResult.AppendText(string.Format("| {0} |",
                            sCol));
-                    }                    
+                    }
+                    UpdateResults("");  
                 }
             }
             catch (Exception oEx)
@@ -311,6 +312,15 @@ namespace SQL
                 UpdateStatus(sError);
                 UpdateStatus(oEx.Message);
             }
+        }
+
+        private void checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxQuery.Text = (checkBox.Checked)
+                ?   "SELECT Vorname, Zuname, tort.name AS Wohnort" + Environment.NewLine
+                    + "FROM tperson" + Environment.NewLine
+                    + "LEFT JOIN tort ON tperson.wohnort = tort.id"
+                :   string.Empty;
         }
     }
 }

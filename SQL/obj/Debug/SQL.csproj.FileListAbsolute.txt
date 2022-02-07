@@ -12,13 +12,10 @@ D:\Source\Repos\SQL\SQL\bin\Debug\System.Buffers.dll
 D:\Source\Repos\SQL\SQL\bin\Debug\K4os.Compression.LZ4.dll
 D:\Source\Repos\SQL\SQL\bin\Debug\K4os.Hash.xxHash.dll
 D:\Source\Repos\SQL\SQL\bin\Debug\MySql.Data.xml
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.AssemblyReference.cache
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.SuggestedBindingRedirects.cache
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.exe.config
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.FormMain.resources
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.Properties.Resources.resources
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.GenerateResource.cache
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.CoreCompileInputs.cache
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.CopyComplete
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.exe
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.pdb
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csprojResolveAssemblyReference.cache
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.SQL.exe.config
