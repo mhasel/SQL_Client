@@ -10,7 +10,7 @@ namespace SQL
     public class MySqlWrapper : IDatabase
     {
         // --------------------Fields--------------------
-        private MySqlConnection oMySqlConnection;
+        private readonly MySqlConnection oMySqlConnection;
 
         // --------------------Constructors--------------------
 
@@ -98,17 +98,22 @@ namespace SQL
                     // Get column names and add them to results list as first item.
                     // Each string array represents a row, with each item in the array being a column.
                     var oData = new List<string[]>
-                    {
-                        Enumerable.Range(0, oReader.FieldCount).Select(i => Helpers.NullCheck<string>(oReader.GetString(i)) ?? "Null").ToArray()
+                    {                  
+                        // Iterate over every column, get the column name and transform the collection to a string array
+                        Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray()
                     };
 
-                    // Add results for each row to list.
+                    // Add results for each row to list. 
                     while (oReader.Read())
                     {
-                        var oColumns = Enumerable.Range(0, oReader.FieldCount)
-                            .Select(i => Helpers.NullCheck<string>(oReader.GetString(i)) ?? "Null")
-                            .ToArray();                        
-                        oData.Add(oColumns);
+                        // Iterate over every column
+                        var sColumns = Enumerable.Range(0, oReader.FieldCount)
+                            .Select(iCol =>
+                            // Get value from each column, check for DBNull and return either the value or NULL as a string
+                            Helpers.NullCheck<string>(oReader.GetValue(iCol))?.ToString() ?? "NULL"
+                        ).ToArray();
+                        // Add to list of rows
+                        oData.Add(sColumns);
                     }
                     return oData;
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SQL
@@ -211,6 +212,7 @@ namespace SQL
         {
             try
             {
+                // Get result
                 List<string[]> oResults = oDatabase.Select(textBoxQuery.Text);
                 if (oResults == null)
                 {
@@ -218,14 +220,21 @@ namespace SQL
                     return;
                 }
 
+                // get length of longest column in query
+                int iMaxLength = oResults.Select(sRows => 
+                        sRows.Max(sCol => sCol.Length)
+                    ).OrderByDescending(iValue => iValue)
+                     .First();
+
+                // Nested foreach loops to print as table
                 foreach (string[] sRow in oResults)
                 {
+                    string sColumns = string.Empty;
                     foreach (string sCol in sRow)
                     {
-                        textBoxResult.AppendText(string.Format("| {0} |",
-                           sCol));
+                        sColumns += $"{sCol.PadRight(iMaxLength + 5)}\t";
                     }
-                    UpdateResults("");  
+                    UpdateResults(sColumns);
                 }
             }
             catch (Exception oEx)

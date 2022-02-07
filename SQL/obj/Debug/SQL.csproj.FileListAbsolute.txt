@@ -17,5 +17,8 @@ D:\Source\Repos\SQL\SQL\obj\Debug\SQL.Properties.Resources.resources
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.GenerateResource.cache
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.exe
 D:\Source\Repos\SQL\SQL\obj\Debug\SQL.pdb
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csprojResolveAssemblyReference.cache
-D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.SQL.exe.config
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.AssemblyReference.cache
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.SuggestedBindingRedirects.cache
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.exe.config
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.CoreCompileInputs.cache
+D:\Source\Repos\SQL\SQL\obj\Debug\SQL.csproj.CopyComplete
