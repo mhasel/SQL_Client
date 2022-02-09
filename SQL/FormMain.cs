@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -33,6 +34,7 @@ namespace SQL
             textBoxPassword.Text = "";
 
             radioButtonOdbc_CheckedChanged(null, null);
+            textBoxResult.Font = new Font(FontFamily.GenericMonospace, textBoxResult.Font.Size);
         }
 
         // --------------------Methods--------------------
@@ -212,6 +214,8 @@ namespace SQL
         {
             try
             {
+                // Skip one line
+                UpdateResults(string.Empty);
                 // Get result
                 List<string[]> oResults = oDatabase.Select(textBoxQuery.Text);
                 if (oResults == null)
@@ -220,19 +224,33 @@ namespace SQL
                     return;
                 }
 
-                // get length of longest column in query
-                int iMaxLength = oResults.Select(sRows => 
-                        sRows.Max(sCol => sCol.Length)
-                    ).OrderByDescending(iValue => iValue)
-                     .First();
+                // Iterate over each column and find the maximum string length across all rows
+                var iMaxLength = new List<int>();
+                for (int iCol = 0; iCol < oResults[0].Length; iCol++)
+                {
+                    iMaxLength.Add
+                    (
+                        oResults
+                        .AsEnumerable()
+                        .Select(sRow => sRow[iCol])
+                        .Aggregate
+                        (
+                            (sEither, sOr) => 
+                            (sOr.Length > sEither.Length) 
+                            ? sOr 
+                            : sEither
+                        ).Length
+                    );
+                };
 
-                // Nested foreach loops to print as table
+                // Nested foreach loops to print results as table
                 foreach (string[] sRow in oResults)
                 {
                     string sColumns = string.Empty;
-                    foreach (string sCol in sRow)
+                    for (int iCol = 0; iCol < sRow.Length; iCol++)
                     {
-                        sColumns += $"{sCol.PadRight(iMaxLength + 5)}\t";
+                        // Pad string to column-specific max string length
+                        sColumns += $"| {sRow[iCol].PadRight(iMaxLength[iCol])} |";
                     }
                     UpdateResults(sColumns);
                 }

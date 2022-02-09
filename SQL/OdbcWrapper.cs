@@ -106,7 +106,8 @@ namespace SQL
                     var oData = new List<string[]>
                     {                  
                         // Iterate over every column, get the column name and transform the collection to a string array
-                        Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray()
+                        Enumerable.Range(0, oReader.FieldCount).Select(oReader.GetName).ToArray(),
+                        Enumerable.Range(0, oReader.FieldCount).Select(sItem => "----").ToArray()
                     };
 
                     // Add results for each row to list. 
