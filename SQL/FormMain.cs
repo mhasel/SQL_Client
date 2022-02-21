@@ -16,6 +16,7 @@ namespace SQL
         }
 
         private const string sError = "++++ ERROR ++++";
+        private const string sQuerySuccess = "++++ RESULT ++++";
 
         // --------------------Fields--------------------
 
@@ -174,7 +175,7 @@ namespace SQL
             try
             {
                 oDatabase.Connect();
-                UpdateStatus("++++ SUCCESS ++++");
+                UpdateStatus("++++SUCCESS++++");
                 UpdateStatus("Connection established.");
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = true;
@@ -224,6 +225,7 @@ namespace SQL
                     return;
                 }
 
+                UpdateResults(sQuerySuccess);
                 // Iterate over each column and find the maximum string length across all rows
                 var iMaxLength = new List<int>();
                 for (int iCol = 0; iCol < oResults[0].Length; iCol++)
@@ -280,6 +282,8 @@ namespace SQL
                 // sResult is null if there are no results.
                 sResult = oDatabase.Scalar(textBoxQuery.Text);
 
+                UpdateResults(string.Empty);
+                UpdateResults(sQuerySuccess);
                 if (sResult == null)
                 {
                     UpdateResults("Query has returned no results.");
@@ -313,6 +317,9 @@ namespace SQL
             {
                 // iResult is null if oDatabase is not referencing an object
                 iResult = oDatabase?.NonQuery(textBoxQuery.Text);
+
+                UpdateResults(string.Empty);
+                UpdateResults(sQuerySuccess);
                 switch (iResult)
                 {
                     // catch edge case. the only way this happens is due to a programming error
