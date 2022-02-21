@@ -216,8 +216,9 @@ namespace SQL
             {
                 // Skip one line
                 UpdateResults(string.Empty);
-                // Get result
-                List<string[]> oResults = oDatabase.Select(textBoxQuery.Text);
+                // Get result. Will return null if there are no results to the query or if 
+                // oDatabase points to NULL -> edge case
+                List<string[]> oResults = oDatabase?.Select(textBoxQuery.Text);
                 if (oResults == null)
                 {
                     UpdateResults("Query has returned no results.");
@@ -226,20 +227,19 @@ namespace SQL
 
                 // Iterate over each column and find the maximum string length across all rows
                 var iMaxLength = new List<int>();
+                // Iterate over each column once. The amount of columns is the same for all rows
                 for (int iCol = 0; iCol < oResults[0].Length; iCol++)
                 {
                     iMaxLength.Add
                     (
+                        // Only select one item per row, at the current iterations's column index
                         oResults
-                        .AsEnumerable()
-                        .Select(sRow => sRow[iCol])
-                        .Aggregate
-                        (
-                            (sEither, sOr) => 
-                            (sOr.Length > sEither.Length) 
-                            ? sOr 
-                            : sEither
-                        ).Length
+                            // Transform collection from string array to lengths of each string
+                            .Select(sRow => sRow[iCol].Length)
+                            // Find the longest string of this collection and add it's length to the iMaxLength list.
+                            // The index in the list will match the index of the column the value was in.
+                            .OrderByDescending(iLength => iLength)
+                            .First()    
                     );
                 };
 
@@ -277,11 +277,13 @@ namespace SQL
             string sResult;
             try
             {
-                // sResult is null if there are no results.
-                sResult = oDatabase.Scalar(textBoxQuery.Text);
+                // sResult is null if there are no results (or oDatabase points to NULL -> edge case)
+                sResult = oDatabase?.Scalar(textBoxQuery.Text);
 
                 if (sResult == null)
                 {
+                    // todo: check for db nullptr edgecase by doing a nonquery
+
                     UpdateResults("Query has returned no results.");
                     return;
                 }
