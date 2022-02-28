@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageConnection = new System.Windows.Forms.TabPage();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
@@ -65,7 +66,7 @@
             this.tabControl.Controls.Add(this.tabPageQuery);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
-            this.tabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(770, 327);
@@ -91,9 +92,9 @@
             this.tabPageConnection.Controls.Add(this.labelMessage);
             this.tabPageConnection.Controls.Add(this.textBoxStatus);
             this.tabPageConnection.Location = new System.Drawing.Point(4, 22);
-            this.tabPageConnection.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageConnection.Margin = new System.Windows.Forms.Padding(2);
             this.tabPageConnection.Name = "tabPageConnection";
-            this.tabPageConnection.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageConnection.Padding = new System.Windows.Forms.Padding(2);
             this.tabPageConnection.Size = new System.Drawing.Size(762, 301);
             this.tabPageConnection.TabIndex = 0;
             this.tabPageConnection.Text = "Connection";
@@ -104,7 +105,7 @@
             this.textBoxPassword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxPassword.Location = new System.Drawing.Point(487, 120);
-            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(270, 23);
             this.textBoxPassword.TabIndex = 17;
@@ -114,7 +115,7 @@
             this.textBoxUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxUser.Location = new System.Drawing.Point(487, 93);
-            this.textBoxUser.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxUser.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxUser.Name = "textBoxUser";
             this.textBoxUser.Size = new System.Drawing.Size(270, 23);
             this.textBoxUser.TabIndex = 16;
@@ -124,7 +125,7 @@
             this.textBoxDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxDb.Location = new System.Drawing.Point(487, 66);
-            this.textBoxDb.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxDb.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxDb.Name = "textBoxDb";
             this.textBoxDb.Size = new System.Drawing.Size(270, 23);
             this.textBoxDb.TabIndex = 15;
@@ -178,7 +179,7 @@
             this.textBoxServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxServer.Location = new System.Drawing.Point(487, 39);
-            this.textBoxServer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxServer.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxServer.Name = "textBoxServer";
             this.textBoxServer.Size = new System.Drawing.Size(270, 23);
             this.textBoxServer.TabIndex = 10;
@@ -198,7 +199,7 @@
             // 
             this.textBoxDsn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.textBoxDsn.Location = new System.Drawing.Point(48, 39);
-            this.textBoxDsn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxDsn.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxDsn.Name = "textBoxDsn";
             this.textBoxDsn.Size = new System.Drawing.Size(270, 23);
             this.textBoxDsn.TabIndex = 7;
@@ -209,7 +210,7 @@
             this.radioButtonOdbc.Checked = true;
             this.radioButtonOdbc.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.radioButtonOdbc.Location = new System.Drawing.Point(8, 15);
-            this.radioButtonOdbc.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonOdbc.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonOdbc.Name = "radioButtonOdbc";
             this.radioButtonOdbc.Size = new System.Drawing.Size(149, 21);
             this.radioButtonOdbc.TabIndex = 6;
@@ -224,7 +225,7 @@
             this.radioButtonNoOdbc.AutoSize = true;
             this.radioButtonNoOdbc.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButtonNoOdbc.Location = new System.Drawing.Point(402, 14);
-            this.radioButtonNoOdbc.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonNoOdbc.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonNoOdbc.Name = "radioButtonNoOdbc";
             this.radioButtonNoOdbc.Size = new System.Drawing.Size(169, 21);
             this.radioButtonNoOdbc.TabIndex = 5;
@@ -237,7 +238,7 @@
             this.buttonDisconnect.Enabled = false;
             this.buttonDisconnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.buttonDisconnect.Location = new System.Drawing.Point(9, 204);
-            this.buttonDisconnect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonDisconnect.Margin = new System.Windows.Forms.Padding(2);
             this.buttonDisconnect.Name = "buttonDisconnect";
             this.buttonDisconnect.Size = new System.Drawing.Size(160, 32);
             this.buttonDisconnect.TabIndex = 4;
@@ -250,7 +251,7 @@
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.buttonHelp.Location = new System.Drawing.Point(9, 262);
-            this.buttonHelp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonHelp.Margin = new System.Windows.Forms.Padding(2);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(160, 32);
             this.buttonHelp.TabIndex = 3;
@@ -263,7 +264,7 @@
             this.buttonConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.buttonConnect.Location = new System.Drawing.Point(9, 168);
-            this.buttonConnect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonConnect.Margin = new System.Windows.Forms.Padding(2);
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(160, 32);
             this.buttonConnect.TabIndex = 2;
@@ -287,7 +288,7 @@
             // 
             this.textBoxStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxStatus.Location = new System.Drawing.Point(184, 168);
-            this.textBoxStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxStatus.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxStatus.Multiline = true;
             this.textBoxStatus.Name = "textBoxStatus";
             this.textBoxStatus.ReadOnly = true;
@@ -304,9 +305,9 @@
             this.tabPageQuery.Controls.Add(this.textBoxResult);
             this.tabPageQuery.Controls.Add(this.textBoxQuery);
             this.tabPageQuery.Location = new System.Drawing.Point(4, 22);
-            this.tabPageQuery.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageQuery.Margin = new System.Windows.Forms.Padding(2);
             this.tabPageQuery.Name = "tabPageQuery";
-            this.tabPageQuery.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPageQuery.Padding = new System.Windows.Forms.Padding(2);
             this.tabPageQuery.Size = new System.Drawing.Size(762, 301);
             this.tabPageQuery.TabIndex = 1;
             this.tabPageQuery.Text = "Queries";
@@ -316,7 +317,7 @@
             // 
             this.checkBox.AutoSize = true;
             this.checkBox.Location = new System.Drawing.Point(684, 113);
-            this.checkBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBox.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox.Name = "checkBox";
             this.checkBox.Size = new System.Drawing.Size(76, 17);
             this.checkBox.TabIndex = 5;
@@ -328,7 +329,7 @@
             // 
             this.buttonNonQuery.Enabled = false;
             this.buttonNonQuery.Location = new System.Drawing.Point(621, 77);
-            this.buttonNonQuery.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonNonQuery.Margin = new System.Windows.Forms.Padding(2);
             this.buttonNonQuery.Name = "buttonNonQuery";
             this.buttonNonQuery.Size = new System.Drawing.Size(134, 32);
             this.buttonNonQuery.TabIndex = 4;
@@ -340,7 +341,7 @@
             // 
             this.buttonScalar.Enabled = false;
             this.buttonScalar.Location = new System.Drawing.Point(621, 41);
-            this.buttonScalar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonScalar.Margin = new System.Windows.Forms.Padding(2);
             this.buttonScalar.Name = "buttonScalar";
             this.buttonScalar.Size = new System.Drawing.Size(134, 32);
             this.buttonScalar.TabIndex = 3;
@@ -352,7 +353,7 @@
             // 
             this.buttonSelect.Enabled = false;
             this.buttonSelect.Location = new System.Drawing.Point(621, 5);
-            this.buttonSelect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonSelect.Margin = new System.Windows.Forms.Padding(2);
             this.buttonSelect.Name = "buttonSelect";
             this.buttonSelect.Size = new System.Drawing.Size(134, 32);
             this.buttonSelect.TabIndex = 2;
@@ -364,7 +365,7 @@
             // 
             this.textBoxResult.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.textBoxResult.Location = new System.Drawing.Point(2, 134);
-            this.textBoxResult.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxResult.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxResult.Multiline = true;
             this.textBoxResult.Name = "textBoxResult";
             this.textBoxResult.ReadOnly = true;
@@ -376,7 +377,7 @@
             // textBoxQuery
             // 
             this.textBoxQuery.Location = new System.Drawing.Point(3, 3);
-            this.textBoxQuery.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxQuery.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxQuery.Multiline = true;
             this.textBoxQuery.Name = "textBoxQuery";
             this.textBoxQuery.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -390,7 +391,8 @@
             this.ClientSize = new System.Drawing.Size(770, 327);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

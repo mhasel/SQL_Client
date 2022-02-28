@@ -117,7 +117,7 @@ namespace SQL
                         var sColumns = Enumerable.Range(0, oReader.FieldCount)
                             .Select(iCol =>
                             // Get value from each column, check for DBNull and return either the value or NULL as a string
-                            Helpers.NullCheck<string>(oReader.GetValue(iCol))?.ToString() ?? "NULL"
+                            Helpers.NullCheck(oReader.GetValue(iCol))?.ToString() ?? "NULL"
                         ).ToArray();
                         // Add to list of rows
                         oData.Add(sColumns);
